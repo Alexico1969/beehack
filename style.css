@@ -1,0 +1,73 @@
+body {
+    background-color: black;
+    color: rgb(251, 243, 97);
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+input, button {
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+    width: 250px;
+}
+button {
+    background-color: rgb(255, 236, 131);
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+input {
+    background-color: #333;
+    color: white;
+    border: 2px solid rgb(206, 193, 79);
+    border-radius: 10px;
+}
+
+img{
+    border-radius: 15px;
+}
+
+table{
+    margin: auto;
+    border:rgb(202, 255, 27) solid 3px;
+    padding: 10px;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+a{
+    color:rgb(225, 252, 139);
+    font-weight: bold;
+}
+
+a:visited{
+    color:rgb(202, 255, 27);
+}
+
+.intro{
+    width: 400px;
+    margin: 30px;
+}
+
+.emphasis{
+    font-weight:bolder;
+    font-size: 105%;
+    color: beige
+}
+
+.hidden{
+    color: black;
+}
+
+.points{
+    margin-left: 100px;
+    margin-right: 50px;
+    border-radius: 15px;
+}
+
+#mailme{
+    border-radius: 15px;
+    padding: 20px 5px;
+}

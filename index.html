@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Heist Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>The Heist Puzzle</h1>
+    <p>Can you uncover the mystery behind the missing bee-files? Enter your clues below.</p>
+
+     <!--hr -->
+    <img class="intro" src="bg_01.png">
+    <p>A thief came in the night. The thief stole the files with all our information about our bees on the 4th floor. Years of research lost !</p>
+    <p>Thank God the thief dropped an external hard drive that we were able to hack !</p>
+    <br>
+
+    <p>You can find the information that was found on the harddrive here:</p>
+    <p> <a href="https://molloycs.org/hacked-drive" target="_blank"><span>LINK</span></a></p>
+
+    <p>Use <span class="emphasis">agent11435</span> as login, </p>
+    <p>and <span class="emphasis">b33hiv3</span> as password,</p>
+   
+    <br>
+     <!--hr -->
+    <div id="mailme"></div>
+    <br>
+    <table>
+        <tr>
+            <td>
+                <h2>Did you find the answers?</h2>
+                <input id="name" type="text" placeholder="Name of the thief" /><br>
+                <input id="dob" type="text" placeholder="Birth of date of the thief" /><br>
+                <input id="city" type="text" placeholder="Location of the thief's (city)" /><br>
+                <button id="submitAnswers">Submit Your Answers</button>
+            </td>
+            <td>
+                <div class="points">
+                    <h2>points</h2>
+                    <h1 id="points">0</h1>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <!--hr -->
+    <br>
+    <div class="hidden">
+        <h4>helpers</h4>
+        <p>https://picarta.ai/</p>
+    </div>
+
+    <script>
+    function updateScore() {
+        var pointsElement = document.getElementById('points');
+
+        // Retrieve the values from local storage
+        var namePoints = localStorage.getItem('name_found');
+        var dobPoints = localStorage.getItem('dob_found');
+        var cityPoints = localStorage.getItem('city_found');
+
+        // Log the values to see what is retrieved
+        console.log("Retrieved - Name Points: ", namePoints, " DOB Points: ", dobPoints, " City Points: ", cityPoints);
+
+        // Parse the retrieved values to integers, considering they might be null or non-numeric
+        var intNamePoints = parseInt(namePoints, 10) || 0;
+        var intDobPoints = parseInt(dobPoints, 10) || 0;
+        var intCityPoints = parseInt(cityPoints, 10) || 0;
+
+        // Log the parsed integers
+        console.log("Parsed - Name Points: ", intNamePoints, " DOB Points: ", intDobPoints, " City Points: ", intCityPoints);
+
+        // Calculate the new score
+        const newScore = intNamePoints + intDobPoints + intCityPoints;
+        pointsElement.textContent = newScore;
+        console.log("*** New score:", newScore);
+
+        if (intNamePoints == 1){
+            document.getElementById('name').disabled = true;
+            document.getElementById('name').style.backgroundColor = 'green';
+        }
+        if (intDobPoints == 1){
+            document.getElementById('dob').disabled = true;
+            document.getElementById('dob').style.backgroundColor = 'green';
+        }
+        if (intCityPoints == 1){
+            document.getElementById('city').disabled = true;
+            document.getElementById('city').style.backgroundColor = 'green';
+        }
+
+        if (newScore == 3){
+            document.getElementById('mailme').innerHTML = "<h1>Congratulations, you've solved the puzzle !</h1><h2>Send and email with all answers to: avanwinkel@molloyhs.org</h2>";
+            document.getElementById('mailme').style.backgroundColor = 'DarkSlateGrey';
+            document.getElementById('mailme').style.color = 'chartreuse';
+            
+        }
+    }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            ['name_found', 'dob_found', 'city_found'].forEach(key => {
+                if (localStorage.getItem(key) === null) {
+                    localStorage.setItem(key, '0');
+                }
+            });
+        });
+
+        function sendRequest(url, value, storageKey) {
+            return new Promise((resolve, reject) => {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', `${url}?data=` + encodeURIComponent(value), true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        if (xhr.responseText.trim() === 'True') {
+                            console.log(storageKey + " correct!");
+                            localStorage.setItem(storageKey, '1');
+                            resolve(storageKey + " updated to 1");
+                        } else {
+                            console.log(storageKey + " incorrect!");
+                            localStorage.setItem(storageKey, '0');
+                            resolve(storageKey + " updated to 0");
+                        }
+                    } else {
+                        reject("Server error with status: " + xhr.status);
+                    }
+                };
+                xhr.onerror = function() {
+                    reject("Request failed");
+                };
+                xhr.send();
+            });
+        }
+
+        document.getElementById('submitAnswers').addEventListener('click', function() {
+            Promise.all([
+                sendRequest('check1.php', document.getElementById('name').value, 'name_found'),
+                sendRequest('check2.php', document.getElementById('dob').value, 'dob_found'),
+                sendRequest('check3.php', document.getElementById('city').value, 'city_found')
+            ]).then(results => {
+                console.log(results); // All requests completed successfully
+                updateScore(); // Update the score after all updates are confirmed
+            }).catch(error => {
+                console.error(error); // Handle errors of any request
+            });
+        });
+
+    </script>
+</body>
+</html>
+
